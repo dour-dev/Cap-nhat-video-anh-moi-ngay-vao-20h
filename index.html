@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Video kiểu TikTok</title>
+<title>Video TikTok Fix</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
   background:#000;
-  overflow:hidden;
 }
 
 #feed{
   height:100vh;
-  overflow-y:scroll;
+  overflow-y:auto;
   scroll-snap-type:y mandatory;
 }
 
@@ -28,19 +27,20 @@ video, img{
   width:100%;
   height:100%;
   object-fit:contain;
+  background:#000;
 }
 
-/* Nút tiếng */
+/* nút tiếng */
 .sound-btn{
   position:absolute;
   right:15px;
   bottom:80px;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,.6);
   color:#fff;
   border:none;
+  width:50px;
+  height:50px;
   border-radius:50%;
-  width:48px;
-  height:48px;
   font-size:20px;
 }
 </style>
@@ -49,23 +49,28 @@ video, img{
 
 <div id="feed">
 
-  <!-- VIDEO 1 -->
   <div class="item">
-    <video src="ttcbeyJrZXkiOiJ6bGlua19zY2hlbWVfbWQ1XzUyYjU5YjFhODZiODU0ZmU1MWFiYjhmMGRlOWYzNjdhIiwidGltZSI6IjE3Njc0MjIwMjAiLCJpZCI6IjIwMjYwMTAzMTQwMzYyOTMzNiIsImNvZGUiOiI4YzBhN2UiLCJjb21iX2tleSI6IiJ9zlink_endpoint igT:/ 7.54 :7pm q@e.Ox" loop></video>
-    <audio src="media/audio1.mp3"></audio>
+    <video 
+      src="media/video1.mp4"
+      muted
+      playsinline
+      loop
+      preload="auto"
+    ></video>
+    <audio src="media/audio1.mp3" preload="auto"></audio>
     <button class="sound-btn">🔇</button>
   </div>
 
-  <!-- VIDEO 2 -->
   <div class="item">
-    <video src="media/video2.mp4" loop></video>
-    <audio src="media/audio2.mp3"></audio>
+    <video 
+      src="media/video2.mp4"
+      muted
+      playsinline
+      loop
+      preload="auto"
+    ></video>
+    <audio src="media/audio2.mp3" preload="auto"></audio>
     <button class="sound-btn">🔇</button>
-  </div>
-
-  <!-- ẢNH -->
-  <div class="item">
-    <img src="media/img1.jpg">
   </div>
 
 </div>
@@ -78,26 +83,25 @@ const observer = new IntersectionObserver(entries=>{
     const video = e.target.querySelector('video');
     const audio = e.target.querySelector('audio');
 
-    if(video){
-      if(e.isIntersecting){
-        video.play();
-      }else{
-        video.pause();
-        audio.pause();
-        audio.currentTime = 0;
-      }
+    if(!video) return;
+
+    if(e.isIntersecting){
+      video.currentTime = 0;
+      video.play().catch(()=>{});
+    }else{
+      video.pause();
+      audio.pause();
+      audio.currentTime = 0;
     }
   });
 },{threshold:0.8});
 
 items.forEach(i=>observer.observe(i));
 
-// Bật / tắt tiếng từng video
+// bật tắt tiếng
 document.querySelectorAll('.sound-btn').forEach(btn=>{
   btn.onclick = ()=>{
-    const item = btn.parentElement;
-    const audio = item.querySelector('audio');
-
+    const audio = btn.parentElement.querySelector('audio');
     if(audio.paused){
       audio.play();
       btn.textContent = '🔊';
